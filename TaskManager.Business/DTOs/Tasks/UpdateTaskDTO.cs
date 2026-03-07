@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TaskManager.Domain.Enums;
-using TaskStatus = TaskManager.Domain.Enums.TaskStatus;
 
 namespace TaskManager.Business.DTOs.Tasks;
 
@@ -13,6 +12,6 @@ public class UpdateTaskDTO
     public string? Description { get; set; }
 
     public DateTime? DueDate { get; set; }
-    public TaskStatus? Status { get; set; }
+
     public TaskPriority? Priority { get; set; }
 }

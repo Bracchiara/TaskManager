@@ -13,12 +13,12 @@ public class TaskRepository : ITaskRepository
     {
         _context = context;
     }
-    public async Task<TaskItem?> GetByIdAsync(int id, int userId)
+    public async Task<TaskItem?> GetByIdAsync(Guid id, Guid userId)
     {
         return await _context.Tasks
             .FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
     }
-    public async Task<IEnumerable<TaskItem>> GetAllByUserIdAsync(int userId)
+    public async Task<IEnumerable<TaskItem>> GetAllByUserIdAsync(Guid userId)
     {
         return await _context.Tasks
             .Where(t => t.UserId == userId)
@@ -40,7 +40,7 @@ public class TaskRepository : ITaskRepository
         return task;
     }
 
-    public async Task<bool> DeleteAsync(int id, int userId)
+    public async Task<bool> DeleteAsync(Guid id, Guid userId)
     {
         var task = await GetByIdAsync(id, userId);
         if (task == null) return false;

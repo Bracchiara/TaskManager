@@ -16,4 +16,6 @@ public class CreateTaskDTO
     public DateTime DueDate { get; set; }
 
     public TaskPriority Priority { get; set; } = TaskPriority.Medium;
+
+    public Guid ColumnId { get; set; }
 }

@@ -20,10 +20,10 @@ public class TaskController : ControllerBase
     }
 
     // Get User ID from JWT token
-    private int GetUserId()
+    private Guid GetUserId()
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        return int.Parse(userIdClaim ?? "0");
+        return Guid.Parse(userIdClaim ?? "0");
     }
 
     // List all tasks for the authenticated user
@@ -37,7 +37,7 @@ public class TaskController : ControllerBase
 
     // Get a specific task by ID
     [HttpGet("{id}")]
-    public async Task<ActionResult<TaskDTO>> GetById(int id)
+    public async Task<ActionResult<TaskDTO>> GetById(Guid id)
     {
         try
         {
@@ -62,7 +62,7 @@ public class TaskController : ControllerBase
 
     // Update an existing task
     [HttpPost("{id}")]
-    public async Task<ActionResult<TaskDTO>> Update(int id, [FromBody] UpdateTaskDTO updateTaskDTO)
+    public async Task<ActionResult<TaskDTO>> Update(Guid id, [FromBody] UpdateTaskDTO updateTaskDTO)
     {
         try
         {
@@ -78,7 +78,7 @@ public class TaskController : ControllerBase
 
     // Delete a task
     [HttpDelete("{id}")]
-    public async Task<ActionResult<TaskDTO>> Delete(int id)
+    public async Task<ActionResult<TaskDTO>> Delete(Guid id)
     {
         var userId = GetUserId();
         var result = await _taskService.DeleteAsync(id, userId);
@@ -87,21 +87,5 @@ public class TaskController : ControllerBase
             return NotFound(new { message = "Task not found"});
 
         return NoContent();
-    }
-
-    // Mark a task as completed/uncompleted
-    [HttpPatch("{id}/toggle")]
-    public async Task<ActionResult<TaskDTO>> ToggleComplete(int id)
-    {
-        try
-        {
-            var userId = GetUserId();
-            var task = await _taskService.ToggleCompleteAsync(id, userId);
-            return Ok(task);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(new { message = ex.Message });
-        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using TaskManagerAPI.Domain.Entities;
+﻿using TaskManager.Domain.Entities;
 using TaskManager.Domain.Interfaces;
 using TaskManager.Business.DTOs.Auth;
 using TaskManager.Business.Interfaces;

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using TaskManager.Business.DTOs.Auth;
+using TaskManager.Business.DTOs.Boards;
 using TaskManager.Business.DTOs.Tasks;
 using TaskManager.Domain.Entities;
 
@@ -15,6 +16,10 @@ public class MappingProfile : Profile
         CreateMap<CreateTaskDTO, TaskItem>();
 
         CreateMap<User, AuthResponseDTO>();
+
+        CreateMap<Board, BoardDTO>();
+
+        CreateMap<CreateBoardDTO, Board>();
 
     }
 }

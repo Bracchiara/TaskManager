@@ -4,10 +4,9 @@ namespace TaskManager.Business.Interfaces;
 
 public interface ITaskService
 {
-    Task<IEnumerable<TaskDTO>> GetAllByUserAsync(int userId);
-    Task<TaskDTO> GetByIdAsync(int id, int userId);
-    Task<TaskDTO> CreateAsync(CreateTaskDTO createTaskDto, int userId);
-    Task<TaskDTO> UpdateAsync(int id, UpdateTaskDTO updateTaskDto, int userId);
-    Task<bool> DeleteAsync(int id, int userId);
-    Task<TaskDTO> ToggleCompleteAsync(int ind, int userId);
+    Task<TaskDTO> GetByIdAsync(Guid id, Guid userId);
+    Task<IEnumerable<TaskDTO>> GetAllByUserAsync(Guid userId);
+    Task<TaskDTO> CreateAsync(CreateTaskDTO createTaskDto, Guid userId);
+    Task<TaskDTO> UpdateAsync(Guid id, UpdateTaskDTO updateTaskDto, Guid userId);
+    Task<bool> DeleteAsync(Guid id, Guid userId);
 }

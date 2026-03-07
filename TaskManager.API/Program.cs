@@ -28,6 +28,7 @@ builder.Services.AddAutoMapper(config =>
 });
 
 // Repositories
+builder.Services.AddScoped<IBoardRepository, BoardRepository>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
@@ -35,6 +36,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IBoardService, BoardService>();
 
 // Jwt Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
