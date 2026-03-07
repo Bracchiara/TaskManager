@@ -16,6 +16,7 @@ public class TaskRepository : ITaskRepository
     public async Task<TaskItem?> GetByIdAsync(Guid id, Guid userId)
     {
         return await _context.Tasks
+            .Include (t => t.Column)
             .FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
     }
     public async Task<IEnumerable<TaskItem>> GetAllByUserIdAsync(Guid userId)

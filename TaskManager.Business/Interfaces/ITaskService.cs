@@ -9,4 +9,5 @@ public interface ITaskService
     Task<TaskDTO> CreateAsync(CreateTaskDTO createTaskDto, Guid userId);
     Task<TaskDTO> UpdateAsync(Guid id, UpdateTaskDTO updateTaskDto, Guid userId);
     Task<bool> DeleteAsync(Guid id, Guid userId);
+    Task<TaskDTO> MoveToColumnAsync(Guid id, MoveTaskDTO moveTaskDTO, Guid userId);
 }

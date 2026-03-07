@@ -88,4 +88,19 @@ public class TaskController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpPatch("{id}/move")]
+    public async Task<ActionResult<TaskDTO>> MoveToColumn(Guid id, [FromBody] MoveTaskDTO moveTaskDTO)
+    {
+        try
+        {
+            var userId = GetUserId();
+            var task = await _taskService.MoveToColumnAsync(id, moveTaskDTO, userId);
+            return Ok(task);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
 }

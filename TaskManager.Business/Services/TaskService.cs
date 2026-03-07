@@ -81,13 +81,22 @@ public class TaskService : ITaskService
 
     public async Task<TaskDTO> MoveToColumnAsync(Guid id, MoveTaskDTO moveTaskDTO, Guid userId)
     {
-        var task = _taskRepository.GetByIdAsync(id, userId);
+        var task = await _taskRepository.GetByIdAsync(id, userId);
 
         if (task is null)
         {
-            throw new Exception("Couldn't be move the task");
+            throw new Exception("Task not found");
+        }
+        if (task.Column.BoardId != moveTaskDTO.BoardId)
+        {
+            throw new Exception("Task is not in this board");
         }
 
+        task.ColumnId = moveTaskDTO.ColumnId;
+        task.CompletedAt = DateTime.UtcNow;
 
+        var updatedTask = await _taskRepository.UpdateAsync(task);
+
+        return _mapper.Map<TaskDTO>(updatedTask);
     }
 }
