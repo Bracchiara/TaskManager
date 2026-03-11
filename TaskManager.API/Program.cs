@@ -31,6 +31,7 @@ builder.Services.AddAutoMapper(config =>
 builder.Services.AddScoped<IBoardRepository, BoardRepository>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IColumnRepository, ColumnRepository>();
 
 // Services
 builder.Services.AddScoped<IAuthService, AuthService>();

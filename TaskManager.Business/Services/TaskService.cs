@@ -8,11 +8,13 @@ namespace TaskManager.Business.Services;
 
 public class TaskService : ITaskService
 {
+    private readonly IColumnRepository _columnRepository;
     private readonly ITaskRepository _taskRepository;
     private readonly IMapper _mapper;
 
-    public TaskService(ITaskRepository taskRepository, IMapper mapper)
+    public TaskService(ITaskRepository taskRepository, IMapper mapper, IColumnRepository columnRepository)
     {
+        _columnRepository = columnRepository;
         _taskRepository = taskRepository;
         _mapper = mapper;
     }
@@ -92,8 +94,13 @@ public class TaskService : ITaskService
             throw new Exception("Task is not in this board");
         }
 
+        var newColumn = await _columnRepository.GetByIdAsync(moveTaskDTO.ColumnId);
+
         task.ColumnId = moveTaskDTO.ColumnId;
-        task.CompletedAt = DateTime.UtcNow;
+
+        task.CompletedAt = newColumn.IsDone
+            ? DateTime.UtcNow
+            : null;
 
         var updatedTask = await _taskRepository.UpdateAsync(task);
 

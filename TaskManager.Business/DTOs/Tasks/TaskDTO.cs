@@ -11,7 +11,7 @@ public class TaskDTO
     public DateTime DueDate { get; set; }
     public TaskPriority Priority { get; set; }
     public DateTime CreatedAt { get; set; }
-    public DateTime? CompleteAt { get; set; }
+    public DateTime? CompletedAt { get; set; }
     public Guid ColumnId { get; set; }
 
 }
