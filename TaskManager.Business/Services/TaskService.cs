@@ -94,9 +94,9 @@ public class TaskService : ITaskService
             throw new Exception("Task is not in this board");
         }
 
-        var newColumn = await _columnRepository.GetByIdAsync(moveTaskDTO.ColumnId);
+        var newColumn = await _columnRepository.GetByIdAsync(moveTaskDTO.NewColumnId, moveTaskDTO.BoardId);
 
-        task.ColumnId = moveTaskDTO.ColumnId;
+        task.ColumnId = moveTaskDTO.NewColumnId;
 
         task.CompletedAt = newColumn.IsDone
             ? DateTime.UtcNow

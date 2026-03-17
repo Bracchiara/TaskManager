@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using TaskManager.Business.DTOs.Auth;
 using TaskManager.Business.DTOs.Boards;
+using TaskManager.Business.DTOs.Columns;
 using TaskManager.Business.DTOs.Tasks;
 using TaskManager.Domain.Entities;
 
@@ -21,5 +22,8 @@ public class MappingProfile : Profile
 
         CreateMap<CreateBoardDTO, Board>();
 
+        CreateMap<Column, ColumnDTO>();
+
+        CreateMap<CreateColumnDTO, Column>();
     }
 }

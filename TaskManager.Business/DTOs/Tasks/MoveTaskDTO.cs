@@ -2,6 +2,6 @@
 
 public class MoveTaskDTO
 {
-    public Guid ColumnId { get; set; }
+    public Guid NewColumnId { get; set; }
     public Guid BoardId { get; set; }
 }

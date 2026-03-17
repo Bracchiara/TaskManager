@@ -45,11 +45,11 @@ public class BoardService : IBoardService
         board.CreatedAt = DateTime.UtcNow;
         board.Columns = new List<Column>
         {
-            new Column { Id = Guid.NewGuid(), Name = "Backlog", Order = 1, BoardId = board.Id, IsDone = false},
-            new Column { Id = Guid.NewGuid(), Name = "To Do", Order = 2, BoardId = board.Id, IsDone = false},
-            new Column { Id = Guid.NewGuid(), Name = "In Progress", Order = 3, BoardId = board.Id, IsDone = false},
-            new Column { Id = Guid.NewGuid(), Name = "Review", Order = 4, BoardId = board.Id, IsDone = false},
-            new Column { Id = Guid.NewGuid(), Name = "Done", Order = 5, BoardId = board.Id, IsDone = true},
+            new Column { Id = Guid.NewGuid(), Name = "Backlog", Order = 1, BoardId = board.Id, IsDone = false, IsDefault = true},
+            new Column { Id = Guid.NewGuid(), Name = "To Do", Order = 2, BoardId = board.Id, IsDone = false, IsDefault = true},
+            new Column { Id = Guid.NewGuid(), Name = "In Progress", Order = 3, BoardId = board.Id, IsDone = false, IsDefault = true},
+            new Column { Id = Guid.NewGuid(), Name = "Review", Order = 4, BoardId = board.Id, IsDone = false, IsDefault = true},
+            new Column { Id = Guid.NewGuid(), Name = "Done", Order = 5, BoardId = board.Id, IsDone = true, IsDefault = true},
         };
 
 

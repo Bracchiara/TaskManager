@@ -3,7 +3,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TaskManager.Business.DTOs.Boards;
+using TaskManager.Business.DTOs.Columns;
+using TaskManager.Business.DTOs.Tasks;
 using TaskManager.Business.Interfaces;
+using TaskManager.Business.Services;
 
 namespace TaskManager.API.Controllers;
 
@@ -13,10 +16,12 @@ namespace TaskManager.API.Controllers;
 public class BoardController : ControllerBase
 {
     private readonly IBoardService _boardService;
+    private readonly IColumnService _columnService;
 
-    public BoardController(IBoardService boardService)
+    public BoardController(IBoardService boardService, IColumnService columnService)
     {
         _boardService = boardService;
+        _columnService = columnService;
     }
 
     // Get User ID from JWT token
@@ -55,7 +60,7 @@ public class BoardController : ControllerBase
 
     // Create a new board
     [HttpPost]
-    public async Task<ActionResult<BoardDTO>> Create([FromBody] CreateBoardDTO createBoardDTO)
+    public async Task<ActionResult<BoardDTO>> CreateBoard([FromBody] CreateBoardDTO createBoardDTO)
     {
         var userId = GetUserId();
         var board = await _boardService.CreateAsync(createBoardDTO, userId);
@@ -64,8 +69,8 @@ public class BoardController : ControllerBase
     }
 
     // Update a existing board
-    [HttpPost("{id}")]
-    public async Task<ActionResult<BoardDTO>> Update(Guid id, [FromBody] UpdateBoardDTO updateBoardDTO)
+    [HttpPut("{id}")]
+    public async Task<ActionResult<BoardDTO>> UpdateBoard(Guid id, [FromBody] UpdateBoardDTO updateBoardDTO)
     {
         try
         {
@@ -81,8 +86,8 @@ public class BoardController : ControllerBase
     }
 
     // Delete a board
-    [HttpDelete]
-    public async Task<ActionResult<BoardDTO>> Delete(Guid id)
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<BoardDTO>> DeleteBoard(Guid id)
     {
         var userId = GetUserId();
         var result = await _boardService.DeleteAsync(id, userId);
@@ -91,5 +96,83 @@ public class BoardController : ControllerBase
             return NotFound(new {message = "Board not found"});
 
         return NoContent();
+    }
+
+    // List all columns from a board
+    [HttpGet("{boardId}/columns")]
+    public async Task<ActionResult<IEnumerable<ColumnDTO>>> GetColumns(Guid boardId)
+    {
+        var columns = await _columnService.GetAllByBoardAsync(boardId);
+        return Ok(columns);
+    }
+
+    // Create column
+    [HttpPost("{boardId}/columns")]
+    public async Task<ActionResult<ColumnDTO>> CreateColumn(Guid boardId, [FromBody] CreateColumnDTO createColumnDTO)
+    {
+        try
+        {
+            var userId = GetUserId();
+            var column = await _columnService.CreateAsync(createColumnDTO, boardId, userId);
+
+            return Ok(column);
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(new {message = ex.Message});
+        }
+    }
+
+    // Edit column name
+    [HttpPut("{boardId}/columns/{id}")]
+    public async Task<ActionResult<ColumnDTO>> UpdateColumn(Guid boardId, Guid id, [FromBody] UpdateColumnDTO updateColumnDTO)
+    {
+        try
+        {
+            var userId = GetUserId();
+            var column = await _columnService.UpdateAsync(id, updateColumnDTO, boardId, userId);
+
+            return Ok(column);
+        }
+        catch (Exception ex)
+        {
+            return NotFound(new {message = ex.Message});
+        }
+    }
+
+    // Delete column
+    [HttpDelete("{boardId}/columns/{id}")]
+    public async Task<ActionResult<ColumnDTO>> DeleteColumn(Guid boardId, Guid id)
+    {
+        try
+        { 
+            var userId = GetUserId();
+            var column = await _columnService.DeleteAsync(id, boardId, userId);
+
+            if (!column)
+                return NotFound(new { message = "Column not found" });
+
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message});
+        }
+    }
+
+    // Move column
+    [HttpPatch("{boardId}/columns/{id}/reorder")]
+    public async Task<ActionResult<ReorderColumnDTO>> MoveColumn(Guid boardId, Guid id, [FromBody] ReorderColumnDTO reorderColumnDTO)
+    {
+        try
+        {
+            var userId = GetUserId();
+            var column = await _columnService.ReorderColumnAsync(id, reorderColumnDTO, boardId, userId);
+            return Ok(column);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new {message = ex.Message});
+        }
     }
 }
