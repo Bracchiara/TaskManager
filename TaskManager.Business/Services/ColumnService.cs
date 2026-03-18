@@ -107,9 +107,9 @@ public class ColumnService : IColumnService
         return await _columnRepository.DeleteAsync(id, boardId);
     }
 
-    public async Task<ColumnDTO> ReorderColumnAsync(Guid id, ReorderColumnDTO moveColumnDTO, Guid boardId, Guid userId)
+    public async Task<ColumnDTO> ReorderColumnAsync(Guid id, ReorderColumnDTO reorderColumnDTO, Guid boardId, Guid userId)
     {
-        var board = await _boardRepository.GetByIdAsync(id, boardId);
+        var board = await _boardRepository.GetByIdAsync(boardId, userId);
         if (board is null)
             throw new Exception("Board not found.");
 
@@ -118,11 +118,45 @@ public class ColumnService : IColumnService
             throw new Exception("Column not found.");
 
         var columnCount = await _columnRepository.CountByBoardIdAsync(boardId);
-        if (moveColumnDTO.NewOrder < 1 || moveColumnDTO.NewOrder > columnCount)
+        if (reorderColumnDTO.NewOrder < 1 || reorderColumnDTO.NewOrder > columnCount)
             throw new Exception($"Order must be between 1 and {columnCount}");
 
-        column.Order = moveColumnDTO.NewOrder;
+        var oldOrder = column.Order;
+        var newOrder = reorderColumnDTO.NewOrder;
 
+        if (oldOrder == newOrder)
+            return _mapper.Map<ColumnDTO>(column);
+
+        var allColumns = (await _columnRepository.GetAllByBoardAsync(boardId)).ToList();
+
+        if (newOrder < oldOrder)
+        {
+            foreach (var col in allColumns)
+            {
+                if (col.Id == id) continue;
+
+                if (col.Order >= newOrder && col.Order < oldOrder)
+                {
+                    col.Order++;
+                    await _columnRepository.UpdateAsync(col);
+                }
+            }
+        }
+        else
+        {
+            foreach (var col in allColumns)
+            {
+                if (col.Id == id) continue;
+
+                if (col.Order > oldOrder && col.Order <= newOrder)
+                {
+                    col.Order--;
+                    await _columnRepository.UpdateAsync(col);
+                }
+            }
+        }
+
+        column.Order = newOrder;
         var updatedColumn = await _columnRepository.UpdateAsync(column);
 
         return _mapper.Map<ColumnDTO>(updatedColumn);

@@ -162,7 +162,7 @@ public class BoardController : ControllerBase
 
     // Move column
     [HttpPatch("{boardId}/columns/{id}/reorder")]
-    public async Task<ActionResult<ReorderColumnDTO>> MoveColumn(Guid boardId, Guid id, [FromBody] ReorderColumnDTO reorderColumnDTO)
+    public async Task<ActionResult<ColumnDTO>> ReorderColumn(Guid boardId, Guid id, [FromBody] ReorderColumnDTO reorderColumnDTO)
     {
         try
         {
@@ -172,7 +172,7 @@ public class BoardController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(new {message = ex.Message});
+            return BadRequest(new { message = ex.Message });
         }
     }
 }
