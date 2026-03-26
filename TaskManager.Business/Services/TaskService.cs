@@ -8,12 +8,14 @@ namespace TaskManager.Business.Services;
 
 public class TaskService : ITaskService
 {
+    private readonly IBoardMemberRepository _boardMemberRepository;
     private readonly IColumnRepository _columnRepository;
     private readonly ITaskRepository _taskRepository;
     private readonly IMapper _mapper;
 
-    public TaskService(ITaskRepository taskRepository, IMapper mapper, IColumnRepository columnRepository)
+    public TaskService(ITaskRepository taskRepository, IMapper mapper, IColumnRepository columnRepository, IBoardMemberRepository boardMemberRepository)
     {
+        _boardMemberRepository = boardMemberRepository;
         _columnRepository = columnRepository;
         _taskRepository = taskRepository;
         _mapper = mapper;
@@ -25,9 +27,9 @@ public class TaskService : ITaskService
         return _mapper.Map<IEnumerable<TaskDTO>>(tasks);
     }
 
-    public async Task<TaskDTO> GetByIdAsync(Guid id, Guid userId)
+    public async Task<TaskDTO> GetByIdAsync(Guid id)
     {
-        var task = await _taskRepository.GetByIdAsync(id, userId);
+        var task = await _taskRepository.GetByIdAsync(id);
 
         if (task is null)
         {
@@ -105,5 +107,23 @@ public class TaskService : ITaskService
         var updatedTask = await _taskRepository.UpdateAsync(task);
 
         return _mapper.Map<TaskDTO>(updatedTask);
+    }
+
+    public async Task<TaskDTO> AssignTaskAsync(Guid taskid, AssignTaskDTO assignTaskDTO, Guid userId)
+    {
+        var task = await _taskRepository.GetByIdAsync(taskid, userId);
+
+        if (task == null)
+            throw new Exception("Task not found");
+
+        var boardId = task.Column.BoardId;
+
+        if (!await _boardMemberRepository.IsOwnerAsync(boardId, userId))
+            throw new Exception("Only board owner can assign tasks");
+
+        task.AssignedToUserId = assignTaskDTO.AssignedToUserId;
+
+        var updatedTask = await _taskRepository.UpdateAsync(task);
+        return _mapper.Map<TaskDTO> (updatedTask);
     }
 }

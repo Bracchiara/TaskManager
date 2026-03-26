@@ -61,7 +61,7 @@ public class TaskController : ControllerBase
     }
 
     // Update an existing task
-    [HttpPost("{id}")]
+    [HttpPut("{id}")]
     public async Task<ActionResult<TaskDTO>> Update(Guid id, [FromBody] UpdateTaskDTO updateTaskDTO)
     {
         try
@@ -101,6 +101,21 @@ public class TaskController : ControllerBase
         catch (Exception ex)
         {
             return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpPatch("{id}/assign")]
+    public async Task<ActionResult<TaskDTO>> AssignTask(Guid id, [FromBody] AssignTaskDTO assignTaskDTO)
+    {
+        try
+        {
+            var userId = GetUserId();
+            var task = await _taskService.AssignTaskAsync(id, assignTaskDTO, userId);
+            return Ok(task);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new {message = ex.Message});
         }
     }
 }

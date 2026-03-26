@@ -32,6 +32,7 @@ builder.Services.AddScoped<IBoardRepository, BoardRepository>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IColumnRepository, ColumnRepository>();
+builder.Services.AddScoped<IBoardMemberRepository, BoardMemberRepository>();
 
 // Services
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -39,6 +40,7 @@ builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IBoardService, BoardService>();
 builder.Services.AddScoped<IColumnService, ColumnService>();
+builder.Services.AddScoped<IBoardMemberService, BoardMemberService>();
 
 // Jwt Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");

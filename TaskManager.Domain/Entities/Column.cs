@@ -1,12 +1,13 @@
-﻿namespace TaskManager.Domain.Entities;
+﻿using TaskManager.Domain.Enums;
+
+namespace TaskManager.Domain.Entities;
 
 public class Column
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public int Order { get; set; }
-    public bool IsDone { get; set; } = false;
-    public bool IsDefault { get; set; } = false;
+    public ColumnType Type { get; set; }
 
     // FK
     public Guid BoardId { get; set; }

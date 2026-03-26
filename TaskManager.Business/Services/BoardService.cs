@@ -2,6 +2,7 @@
 using TaskManager.Business.DTOs.Boards;
 using TaskManager.Business.Interfaces;
 using TaskManager.Domain.Entities;
+using TaskManager.Domain.Enums;
 using TaskManager.Domain.Interfaces;
 
 namespace TaskManager.Business.Services;
@@ -52,6 +53,17 @@ public class BoardService : IBoardService
             new Column { Id = Guid.NewGuid(), Name = "Done", Order = 5, BoardId = board.Id, IsDone = true, IsDefault = true},
         };
 
+        board.Members = new List<BoardMember>
+        {
+            new BoardMember
+            {
+                Id = Guid.NewGuid(),
+                BoardId = board.Id,
+                UserId = userId,
+                Role = BoardRole.Owner,
+                AddedAt = DateTime.UtcNow,
+            }
+        };
 
         var createBoard = await _boardRepository.CreateAsync(board);
 

@@ -10,4 +10,5 @@ public interface ITaskService
     Task<TaskDTO> UpdateAsync(Guid id, UpdateTaskDTO updateTaskDto, Guid userId);
     Task<bool> DeleteAsync(Guid id, Guid userId);
     Task<TaskDTO> MoveToColumnAsync(Guid id, MoveTaskDTO moveTaskDTO, Guid userId);
+    Task<TaskDTO> AssignTaskAsync(Guid taskid, AssignTaskDTO assignTaskDTO, Guid userId);
 }

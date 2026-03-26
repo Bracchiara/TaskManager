@@ -17,11 +17,13 @@ public class BoardController : ControllerBase
 {
     private readonly IBoardService _boardService;
     private readonly IColumnService _columnService;
+    private readonly IBoardMemberService _boardMemberService;
 
-    public BoardController(IBoardService boardService, IColumnService columnService)
+    public BoardController(IBoardService boardService, IColumnService columnService, IBoardMemberService boardMemberService)
     {
         _boardService = boardService;
         _columnService = columnService;
+        _boardMemberService = boardMemberService;
     }
 
     // Get User ID from JWT token
@@ -173,6 +175,50 @@ public class BoardController : ControllerBase
         catch (Exception ex)
         {
             return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    // Add member
+    [HttpPost("{boardId}/members")]
+    public async Task<ActionResult<BoardMemberDTO>> AddMember(Guid boardId, [FromBody] AddMemberDTO addMemberDTO)
+    {
+        try
+        {
+            var userId = GetUserId();
+            var member = await _boardMemberService.CreateAsync(boardId, addMemberDTO, userId);
+            return Ok(member);
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(new {message = ex.Message});
+        }
+    }
+
+    // List members
+    [HttpGet("{boardId}/members")]
+    public async Task<ActionResult<BoardMemberDTO>> GetMembers(Guid boardId)
+    {
+        var members = await _boardMemberService.GetAllByBoardIdAsync(boardId);
+        return Ok(members);
+    }
+
+    // Remove member
+    [HttpDelete("{boardId}/members/{memberId}")]
+    public async Task<ActionResult<BoardMemberDTO>> DeleteMember(Guid boardId, Guid memberId)
+    {
+        try
+        {
+            var userId = GetUserId();
+            var member = await _boardMemberService.DeleteAsync(boardId, memberId, userId);
+
+            if (!member)
+                return NotFound(new { message = "Member not found" });
+
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message});
         }
     }
 }

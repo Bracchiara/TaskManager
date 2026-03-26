@@ -14,16 +14,16 @@ public class BoardRepository : IBoardRepository
         _context = context;
     }
 
-    public async Task<Board?> GetByIdAsync(Guid id, Guid userId)
+    public async Task<Board?> GetByIdAsync(Guid id)
     {
         return await _context.Boards
-            .FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
+            .FirstOrDefaultAsync(b => b.Id == id);
     }
 
     public async Task<IEnumerable<Board>> GetAllByUserIdAsync(Guid userId)
     {
         return await _context.Boards
-            .Where(b => b.UserId == userId)
+            .Where(b => b.UserOwnerId == userId)
             .OrderByDescending(b => b.CreatedAt)
             .ToListAsync();
     }
@@ -42,9 +42,9 @@ public class BoardRepository : IBoardRepository
         return board;
     }
 
-    public async Task<bool> DeleteAsync(Guid id, Guid userId)
+    public async Task<bool> DeleteAsync(Guid id)
     {
-        var board = await GetByIdAsync(id, userId);
+        var board = await GetByIdAsync(id);
         if (board == null) return false;
 
         _context.Boards.Remove(board);

@@ -9,6 +9,6 @@ public class User
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     // 1:N
-    public ICollection<TaskItem> Tasks { get; set; } = new List<TaskItem>();
+    public ICollection<BoardMember> BoardMembers { get; set; } = new List<BoardMember>();
     public ICollection<Board> Boards { get; set; } = new List<Board>();
 }

@@ -8,10 +8,11 @@ public class Board
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     // FK
-    public Guid UserId { get; set; }
+    public Guid UserOwnerId { get; set; }
 
     // 1:1
     public User User { get; set; } = null!;
     // 1:N
     public ICollection<Column> Columns { get; set; } = new List<Column>();
+    public ICollection<BoardMember> Members { get; set; } = new List<BoardMember>();
 }
